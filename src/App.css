@@ -1,0 +1,55 @@
+:root {
+  --size: 0.5rem;
+}
+
+body {
+  margin: var(--size);
+}
+
+h1 {
+  text-decoration: underline;
+  text-align: right;
+}
+
+section {
+  border: 1px solid #ccc;
+  padding: var(--size);
+  margin-bottom: var(--size);
+}
+
+section > h2 {
+  margin-top: 0;
+}
+
+form {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+form label {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-end;
+  align-items: baseline;
+}
+
+form label input {
+  border: 1px solid #ccc;
+  flex: 0 1 calc(100% - 10rem);
+  font: inherit;
+  margin-left: 1em;
+  margin-bottom: var(--size);
+  padding: var(--size);
+}
+
+form button {
+  appearance: none;
+  background: #f0f0f0;
+  border: 0;
+  font: inherit;
+  padding: var(--size);
+}
+
+form button:active {
+  background: #ccc;
+}
