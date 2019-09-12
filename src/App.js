@@ -3,17 +3,12 @@ import './App.css';
 import { useState, useEffect } from 'react';
 import blogService from './services/blogs';
 import loginService from './services/login';
-import Blog from './components/Blog';
-
-function Notification(props) {
-  return (
-    <div>
-      { props.message && (
-        <p className={props.type || 'error'}>{props.message}</p>
-      )}
-    </div>
-  )
-}
+import BlogList from './components/BlogList';
+import NewBlogForm from './components/NewBlogForm';
+import Notification from './components/Notification';
+import LoginForm from './components/LoginForm';
+import LogoutForm from './components/LogoutForm';
+import Togglable from './components/Togglable';
 
 function App() {
   const [blogs, setBlogs] = useState([]);
@@ -45,7 +40,7 @@ function App() {
     setErrorMessage(message);
     if(type) setErrorType(type);
     setTimeout(() => setErrorMessage(null), 8000);
-  }
+  };
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -64,6 +59,11 @@ function App() {
       setNotification('Access denied');
     }
   };
+
+  const handleLogout = (event) => {
+    window.localStorage.removeItem(userStorageKey);
+    setUser(null);
+  }
 
   const handleNewBlog = async (event) => {
     event.preventDefault();
@@ -85,104 +85,37 @@ function App() {
     }
   };
 
-  const handleLogout = (event) => {
-    window.localStorage.removeItem(userStorageKey);
-    setUser(null);
-  }
-
-  const loginForm = () => (
-    <section className="login">
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <label>
-          Username:
-          <input
-            type="text"
-            value={username}
-            name="username"
-            onChange={({target}) => setUsername(target.value)}
-          />
-        </label>
-        <label>
-          Password:
-          <input
-            type="password"
-            value={password}
-            name="password"
-            onChange={({target}) => setPassword(target.value)}
-          />
-        </label>
-        <button type="submit">Log in</button>
-      </form>
-    </section>
-  );
-
-  const logoutForm = () => (
-    <section className="logout">
-      <form onSubmit={handleLogout}>
-        <button type="submit">Log out</button>
-      </form>
-    </section>
-  );
-
-
-  const blogList = () => (
-    <section className="bloglist">
-      <h2>Blogs</h2>
-      {
-        blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
-        )
-      }
-    </section>
-  );
-
-  const blogForm = () => (
-    <section className="blogs">
-      <h2>Add new</h2>
-      <form onSubmit={handleNewBlog}>
-        <label>
-          Title:
-          <input
-            value={newBlogTitle}
-            onChange={({target}) => setNewBlogTitle(target.value)}
-          />
-        </label>
-        <label>
-          Author:
-          <input
-            value={newBlogAuthor}
-            onChange={({target}) => setNewBlogAuthor(target.value)}
-          />
-        </label>
-        <label>
-          URL:
-          <input
-            value={newBlogUrl}
-            onChange={({target}) => setNewBlogUrl(target.value)}
-          />
-        </label>
-        <label>
-          Added by:
-          <input
-            value={'@' + user.username}
-            disabled
-            style={{border: 0, paddingLeft: 0}}
-          />
-        </label>
-        <button type="submit">Add</button>
-      </form>
-    </section>
-  );
-
   return (
     <div>
       <h1>Bloglist</h1>
       <Notification message={errorMessage} type={errorType} />
-      { user === null && loginForm() }
-      { user !== null && logoutForm() }
-      { user !== null && blogForm() }
-      { blogList() }
+      { user === null && (
+        <Togglable showLabel="Log in" hideLabel="Cancel">
+          <LoginForm
+            handleSubmit={handleLogin}
+            handleUsernameChange={({target}) => setUsername(target.value)}
+            handlePasswordChange={({target}) => setPassword(target.value)}
+            username={username}
+            password={password}
+          />
+        </Togglable>
+      )}
+      { user !== null && (
+        <LogoutForm handleSubmit={handleLogout} />
+      ) }
+      { user !== null && (
+        <NewBlogForm
+          username={user.username}
+          handleSubmit={handleNewBlog}
+          blogTitle={newBlogTitle}
+          blogAuthor={newBlogAuthor}
+          blogUrl={newBlogUrl}
+          handleTitleChange={({target}) => setNewBlogTitle(target.value)}
+          handleAuthorChange={({target}) => setNewBlogAuthor(target.value)}
+          handleUrlChange={({target}) => setNewBlogUrl(target.value)}
+        />
+      )}
+      <BlogList blogs={blogs} />
     </div>
   );
 }

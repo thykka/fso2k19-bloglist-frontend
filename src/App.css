@@ -19,7 +19,7 @@ h1 {
 section {
   border: 1px solid #ccc;
   padding: var(--size);
-  margin-bottom: var(--size);
+  margin: var(--size) 0;
 }
 
 section > h2 {
@@ -47,15 +47,16 @@ form label input {
   padding: var(--size);
 }
 
-form button {
+button {
   appearance: none;
   background: #f0f0f0;
   border: 0;
   font: inherit;
   padding: var(--size);
+  margin: var(--size) 0;
 }
 
-form button:active {
+button:active {
   background: #ccc;
 }
 
