@@ -7,7 +7,9 @@ import Blog from './components/Blog';
 
 function App() {
   const [blogs, setBlogs] = useState([]);
-  const [newBlog, setNewBlog] = useState('');
+  const [newBlogTitle, setNewBlogTitle] = useState('');
+  const [newBlogAuthor, setNewBlogAuthor] = useState('');
+  const [newBlogUrl, setNewBlogUrl] = useState('');
   const [errorMessage, setErrorMessage] = useState(null);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -43,9 +45,27 @@ function App() {
       setPassword('');
     } catch(e) {
       setErrorMessage('Access denied');
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
+      setTimeout(() => setErrorMessage(null), 5000);
+    }
+  };
+
+  const handleNewBlog = async (event) => {
+    event.preventDefault();
+    try {
+      await blogService.create({
+        title: newBlogTitle,
+        author: newBlogAuthor,
+        url: newBlogUrl
+      });
+
+      const blogs = await blogService.getAll()
+      setBlogs(blogs);
+      setNewBlogTitle('');
+      setNewBlogAuthor('');
+      setNewBlogUrl('');
+    } catch(e) {
+      setErrorMessage('Failed to add blog');
+      setTimeout(() => setErrorMessage(null), 5000);
     }
   };
 
@@ -57,7 +77,6 @@ function App() {
   const loginForm = () => (
     <section className="login">
       <h2>Login</h2>
-      {/*<Notification message={errorMessage} />*/}
       <form onSubmit={handleLogin}>
         <label>
           Username:
@@ -90,13 +109,6 @@ function App() {
     </section>
   );
 
-  const addBlog = () => {
-
-  };
-
-  const handleBlogChange = async () => {
-
-  };
 
   const blogList = () => (
     <section className="bloglist">
@@ -112,19 +124,34 @@ function App() {
   const blogForm = () => (
     <section className="blogs">
       <h2>Add new</h2>
-      <form onSubmit={addBlog}>
+      <form onSubmit={handleNewBlog}>
         <label>
-          User:
+          Title:
           <input
-            value={user.name}
-            disabled
+            value={newBlogTitle}
+            onChange={({target}) => setNewBlogTitle(target.value)}
           />
         </label>
         <label>
-          Blog URL:
+          Author:
           <input
-            value={newBlog}
-            onChange={handleBlogChange}
+            value={newBlogAuthor}
+            onChange={({target}) => setNewBlogAuthor(target.value)}
+          />
+        </label>
+        <label>
+          URL:
+          <input
+            value={newBlogUrl}
+            onChange={({target}) => setNewBlogUrl(target.value)}
+          />
+        </label>
+        <label>
+          Added by:
+          <input
+            value={'@' + user.username}
+            disabled
+            style={{border: 0, paddingLeft: 0}}
           />
         </label>
         <button type="submit">Add</button>
@@ -135,6 +162,7 @@ function App() {
   return (
     <div>
       <h1>Bloglist</h1>
+      {/*<Notification message={errorMessage} />*/}
       { user === null && loginForm() }
       { user !== null && logoutForm() }
       { user !== null && blogForm() }
