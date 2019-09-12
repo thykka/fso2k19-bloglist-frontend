@@ -1,5 +1,6 @@
 :root {
   --size: 0.5rem;
+  background: #f0f0f0;
 }
 
 * {
@@ -9,6 +10,13 @@
 body {
   font-family: Arial, Helvetica, sans-serif;
   margin: var(--size);
+}
+
+a:link {
+  color: hsl(190, 70%, 30%);
+}
+a:visited {
+  color: hsl(190, 30%, 30%);
 }
 
 h1 {
@@ -49,7 +57,7 @@ form label input {
 
 button {
   appearance: none;
-  background: #f0f0f0;
+  background: hsl(190, 30%, 60%);
   border: 0;
   font: inherit;
   padding: var(--size);
@@ -69,4 +77,16 @@ button:active {
 .info {
   border-color: lime;
   background: lightgreen;
+}
+
+
+.blog button {
+  margin: 0 calc(var(--size) / 2) calc(var(--size) / 2) 0;
+  padding: 0 calc(var(--size) / 2);
+  width: 1.5em;
+}
+
+.blog.expanded {
+  background: #fff;
+  margin-bottom: 1em;
 }
