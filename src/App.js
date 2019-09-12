@@ -5,12 +5,23 @@ import blogService from './services/blogs';
 import loginService from './services/login';
 import Blog from './components/Blog';
 
+function Notification(props) {
+  return (
+    <div>
+      { props.message && (
+        <p className={props.type || 'error'}>{props.message}</p>
+      )}
+    </div>
+  )
+}
+
 function App() {
   const [blogs, setBlogs] = useState([]);
   const [newBlogTitle, setNewBlogTitle] = useState('');
   const [newBlogAuthor, setNewBlogAuthor] = useState('');
   const [newBlogUrl, setNewBlogUrl] = useState('');
   const [errorMessage, setErrorMessage] = useState(null);
+  const [errorType, setErrorType] = useState('error');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
@@ -30,6 +41,12 @@ function App() {
     }
   }, []);
 
+  const setNotification = (message, type = 'error') => {
+    setErrorMessage(message);
+    if(type) setErrorType(type);
+    setTimeout(() => setErrorMessage(null), 8000);
+  }
+
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
@@ -44,8 +61,7 @@ function App() {
       setUsername('');
       setPassword('');
     } catch(e) {
-      setErrorMessage('Access denied');
-      setTimeout(() => setErrorMessage(null), 5000);
+      setNotification('Access denied');
     }
   };
 
@@ -63,9 +79,9 @@ function App() {
       setNewBlogTitle('');
       setNewBlogAuthor('');
       setNewBlogUrl('');
+      setNotification('Blog added', 'info');
     } catch(e) {
-      setErrorMessage('Failed to add blog');
-      setTimeout(() => setErrorMessage(null), 5000);
+      setNotification('Failed to add blog');
     }
   };
 
@@ -162,7 +178,7 @@ function App() {
   return (
     <div>
       <h1>Bloglist</h1>
-      {/*<Notification message={errorMessage} />*/}
+      <Notification message={errorMessage} type={errorType} />
       { user === null && loginForm() }
       { user !== null && logoutForm() }
       { user !== null && blogForm() }

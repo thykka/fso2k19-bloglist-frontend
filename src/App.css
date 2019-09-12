@@ -58,3 +58,14 @@ form button {
 form button:active {
   background: #ccc;
 }
+
+.info,
+.error {
+  border: 1px solid hotpink;
+  background: pink;
+  padding: var(--size);
+}
+.info {
+  border-color: lime;
+  background: lightgreen;
+}
