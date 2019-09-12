@@ -4,6 +4,10 @@ const baseUrl = '/api/blogs'
 const getAll = () => {
   const request = axios.get(baseUrl)
   return request.then(response => response.data)
-}
+};
 
-export default { getAll }
+const setToken = () => {
+
+};
+
+export default { getAll, setToken }

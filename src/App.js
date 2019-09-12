@@ -12,10 +12,20 @@ function App() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
+  const userStorageKey = 'bloglist-user';
 
   useEffect(() => {
     blogService.getAll()
       .then(initialBlogs => setBlogs(initialBlogs))
+  }, []);
+
+  useEffect(() => {
+    const userJSON = window.localStorage.getItem(userStorageKey);
+    if(userJSON) {
+      const user = JSON.parse(userJSON);
+      setUser(user);
+      blogService.setToken(user.token)
+    }
   }, []);
 
   const handleLogin = async (event) => {
@@ -24,6 +34,10 @@ function App() {
       const user = await loginService.login({
         username, password
       });
+      window.localStorage.setItem(
+        userStorageKey,
+        JSON.stringify(user)
+      );
       setUser(user);
       setUsername('');
       setPassword('');
@@ -34,6 +48,11 @@ function App() {
       }, 5000);
     }
   };
+
+  const handleLogout = (event) => {
+    window.localStorage.removeItem(userStorageKey);
+    setUser(null);
+  }
 
   const loginForm = () => (
     <section className="login">
@@ -59,6 +78,14 @@ function App() {
           />
         </label>
         <button type="submit">Log in</button>
+      </form>
+    </section>
+  );
+
+  const logoutForm = () => (
+    <section className="logout">
+      <form onSubmit={handleLogout}>
+        <button type="submit">Log out</button>
       </form>
     </section>
   );
@@ -108,9 +135,10 @@ function App() {
   return (
     <div>
       <h1>Bloglist</h1>
-      { blogList() }
       { user === null && loginForm() }
+      { user !== null && logoutForm() }
       { user !== null && blogForm() }
+      { blogList() }
     </div>
   );
 }
