@@ -1,7 +1,7 @@
 import React from 'react';
 import Blog from './Blog';
 
-const BlogList = ({blogs, userName, handleLikeBlog, handleRemoveBlog}) => {
+const BlogList = ({ blogs, userName, handleLikeBlog, handleRemoveBlog }) => {
   return (
     <section className="bloglist">
       <h2>Blogs {userName}</h2>

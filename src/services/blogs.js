@@ -8,7 +8,7 @@ const setToken = newToken => {
 };
 
 const getAll = async () => {
-  const response = await axios.get(baseUrl)
+  const response = await axios.get(baseUrl);
   return response.data;
 };
 
@@ -18,12 +18,12 @@ const create = async newObject => {
   };
   const response = await axios.post(baseUrl, newObject, config);
   return response.data;
-}
+};
 
 const like = async (id) => {
   const response = await axios.post(`${baseUrl}/like/${id}`);
   return response.data;
-}
+};
 
 const remove = async (id) => {
   const config = {
@@ -31,6 +31,6 @@ const remove = async (id) => {
   };
   const response = await axios.delete(`${baseUrl}/${id}`, config);
   return response.data;
-}
+};
 
-export default { setToken, getAll, create, like, remove }
+export default { setToken, getAll, create, like, remove };

@@ -7,7 +7,7 @@ function Notification(props) {
         <p className={props.type || 'error'}>{props.message}</p>
       )}
     </div>
-  )
+  );
 }
 
 export default Notification;

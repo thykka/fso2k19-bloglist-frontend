@@ -27,7 +27,7 @@ function App() {
 
   useEffect(() => {
     blogService.getAll()
-      .then(initialBlogs => setBlogs(initialBlogs))
+      .then(initialBlogs => setBlogs(initialBlogs));
   }, []);
 
   useEffect(() => {
@@ -35,7 +35,7 @@ function App() {
     if(userJSON) {
       const user = JSON.parse(userJSON);
       setUser(user);
-      blogService.setToken(user.token)
+      blogService.setToken(user.token);
     }
   }, []);
 
@@ -64,9 +64,10 @@ function App() {
   };
 
   const handleLogout = (event) => {
+    event.preventDefault();
     window.localStorage.removeItem(userStorageKey);
     setUser(null);
-  }
+  };
 
   const handleNewBlog = async (event) => {
     event.preventDefault();
@@ -94,25 +95,25 @@ function App() {
     event.preventDefault();
     await blogService.like(id, {});
     updateBlogs();
-  }
+  };
 
   const handleRemoveBlog = async (event, id) => {
     event.preventDefault();
     await blogService.remove(id);
     updateBlogs();
-  }
+  };
 
   const updateBlogs = async () => {
     const blogs = await blogService.getAll();
     setBlogs(blogs);
-  }
+  };
 
   const sortBlogs = (key, desc) => {
     return (blogA, blogB) => {
       if(desc) return blogB[key] - blogA[key];
       return blogA[key] - blogB[key];
-    }
-  }
+    };
+  };
   const sortByLikes = sortBlogs('likes', true);
 
   return (
@@ -123,8 +124,8 @@ function App() {
         <Togglable showLabel="Log in" hideLabel="Cancel">
           <LoginForm
             handleSubmit={handleLogin}
-            handleUsernameChange={({target}) => setUsername(target.value)}
-            handlePasswordChange={({target}) => setPassword(target.value)}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
             username={username}
             password={password}
           />
@@ -140,9 +141,9 @@ function App() {
               blogTitle={newBlogTitle}
               blogAuthor={newBlogAuthor}
               blogUrl={newBlogUrl}
-              handleTitleChange={({target}) => setNewBlogTitle(target.value)}
-              handleAuthorChange={({target}) => setNewBlogAuthor(target.value)}
-              handleUrlChange={({target}) => setNewBlogUrl(target.value)}
+              handleTitleChange={({ target }) => setNewBlogTitle(target.value)}
+              handleAuthorChange={({ target }) => setNewBlogAuthor(target.value)}
+              handleUrlChange={({ target }) => setNewBlogUrl(target.value)}
             />
           </Togglable>
           <BlogList

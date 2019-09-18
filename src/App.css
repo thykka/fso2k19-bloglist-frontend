@@ -91,8 +91,8 @@ button:disabled {
   line-height: 1.5;
   padding: var(--size);
 }
-.blog:not(:first-child) {
-  border-top: 1px solid;
+.blog:not(:first-of-type) {
+  border-top: 1px solid hsl(var(--hue), 25%, 85%);
 }
 
 .blog-actions {
