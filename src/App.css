@@ -1,5 +1,6 @@
 :root {
   --size: 0.5rem;
+  --hue: 190;
   background: #f0f0f0;
 }
 
@@ -13,10 +14,10 @@ body {
 }
 
 a:link {
-  color: hsl(190, 70%, 30%);
+  color: hsl(var(--hue), 70%, 30%);
 }
 a:visited {
-  color: hsl(190, 30%, 30%);
+  color: hsl(var(--hue), 30%, 30%);
 }
 
 h1 {
@@ -57,7 +58,7 @@ form label input {
 
 button {
   appearance: none;
-  background: hsl(190, 30%, 60%);
+  background: hsl(var(--hue), 30%, 60%);
   border: 0;
   font: inherit;
   padding: var(--size);
@@ -66,6 +67,10 @@ button {
 
 button:active {
   background: #ccc;
+}
+button:disabled {
+  color: #888;
+  background: hsl(var(--hue), 5%, 80%);
 }
 
 .info,
@@ -79,14 +84,34 @@ button:active {
   background: lightgreen;
 }
 
+.blog {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  line-height: 1.5;
+  padding: var(--size);
+}
+.blog:not(:first-child) {
+  border-top: 1px solid;
+}
 
-.blog button {
-  margin: 0 calc(var(--size) / 2) calc(var(--size) / 2) 0;
-  padding: 0 calc(var(--size) / 2);
-  width: 1.5em;
+.blog-actions {
+  display: inline-flex;
+  flex-flow: row nowrap;
+}
+
+.blog-actions button {
+  padding: 0 var(--size);
+  margin: 0 0 0 var(--size);
+  min-width: 1.5em;
+  min-height: 1.5em;
+}
+
+.blog .details {
+  width: 100%;
 }
 
 .blog.expanded {
   background: #fff;
-  margin-bottom: 1em;
+  margin-bottom: var(--size) 0;
 }

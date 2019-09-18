@@ -20,6 +20,9 @@ function App() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
+
+  const newBlogFormRef = React.createRef();
+
   const userStorageKey = 'bloglist-user';
 
   useEffect(() => {
@@ -67,6 +70,8 @@ function App() {
 
   const handleNewBlog = async (event) => {
     event.preventDefault();
+    newBlogFormRef.current.toggleVisibility();
+
     try {
       await blogService.create({
         title: newBlogTitle,
@@ -74,8 +79,7 @@ function App() {
         url: newBlogUrl
       });
 
-      const blogs = await blogService.getAll()
-      setBlogs(blogs);
+      updateBlogs();
       setNewBlogTitle('');
       setNewBlogAuthor('');
       setNewBlogUrl('');
@@ -84,6 +88,32 @@ function App() {
       setNotification('Failed to add blog');
     }
   };
+
+
+  const handleLikeBlog = async (event, id) => {
+    event.preventDefault();
+    await blogService.like(id, {});
+    updateBlogs();
+  }
+
+  const handleRemoveBlog = async (event, id) => {
+    event.preventDefault();
+    await blogService.remove(id);
+    updateBlogs();
+  }
+
+  const updateBlogs = async () => {
+    const blogs = await blogService.getAll();
+    setBlogs(blogs);
+  }
+
+  const sortBlogs = (key, desc) => {
+    return (blogA, blogB) => {
+      if(desc) return blogB[key] - blogA[key];
+      return blogA[key] - blogB[key];
+    }
+  }
+  const sortByLikes = sortBlogs('likes', true);
 
   return (
     <div>
@@ -101,21 +131,27 @@ function App() {
         </Togglable>
       )}
       { user !== null && (
-        <LogoutForm handleSubmit={handleLogout} />
-      ) }
-      { user !== null && (
-        <NewBlogForm
-          username={user.username}
-          handleSubmit={handleNewBlog}
-          blogTitle={newBlogTitle}
-          blogAuthor={newBlogAuthor}
-          blogUrl={newBlogUrl}
-          handleTitleChange={({target}) => setNewBlogTitle(target.value)}
-          handleAuthorChange={({target}) => setNewBlogAuthor(target.value)}
-          handleUrlChange={({target}) => setNewBlogUrl(target.value)}
-        />
+        <section>
+          <LogoutForm handleSubmit={handleLogout} name={user.name} />
+          <Togglable ref={newBlogFormRef} showLabel="New blog" hideLabel="Cancel">
+            <NewBlogForm
+              username={user.username}
+              handleSubmit={handleNewBlog}
+              blogTitle={newBlogTitle}
+              blogAuthor={newBlogAuthor}
+              blogUrl={newBlogUrl}
+              handleTitleChange={({target}) => setNewBlogTitle(target.value)}
+              handleAuthorChange={({target}) => setNewBlogAuthor(target.value)}
+              handleUrlChange={({target}) => setNewBlogUrl(target.value)}
+            />
+          </Togglable>
+          <BlogList
+            blogs={blogs.sort(sortByLikes)}
+            userName={user.username}
+            handleLikeBlog={handleLikeBlog}
+            handleRemoveBlog={handleRemoveBlog} />
+        </section>
       )}
-      <BlogList blogs={blogs} />
     </div>
   );
 }
