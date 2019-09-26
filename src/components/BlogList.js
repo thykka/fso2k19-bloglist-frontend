@@ -9,6 +9,7 @@ const BlogList = ({ blogs, userName, handleLikeBlog, handleRemoveBlog }) => {
         blogs.map(blog => {
           return (
             <Blog
+              className="bloglist"
               key={blog.id}
               blog={blog}
               isPostedByUser={userName === blog.user.username}
