@@ -11,26 +11,28 @@ const Blog = ({ blog, isPostedByUser, handleLikeBlog, handleRemoveBlog }) => {
   };
 
   return (
-    <div className={'blog' + (blogExpanded ? ' expanded' : '') }>
-      <a
-        href={blog.url}>
-        {blog.title}
-      </a>
-      <div className="blog-actions">
-        <button
-          onClick={() => setBlogExpanded(!blogExpanded)}>
-          { blogExpanded ? '-' : '+' }
-        </button>
-        <button
-          onClick={event => handleLikeBlog(event, blog.id)}>+1</button>
-        <button
-          onClick={handleRemoveBlogClick}
-          disabled={!isPostedByUser}>X</button>
+    <div>
+      <div className={'blog' + (blogExpanded ? ' expanded' : '') }>
+        <a
+          href={blog.url}>
+          {blog.title}
+        </a>
+        <div className="blog-actions">
+          <button
+            onClick={() => setBlogExpanded(!blogExpanded)}>
+            { blogExpanded ? '-' : '+' }
+          </button>
+          <button
+            onClick={event => handleLikeBlog(event, blog.id)}>+1</button>
+          <button
+            onClick={handleRemoveBlogClick}
+            disabled={!isPostedByUser}>X</button>
+        </div>
       </div>
-      <div className="details" style={{ display: !blogExpanded ? 'none' : '' }}>
-        Author: {blog.author}<br/>
-        Posted by: {blog.user.name}<br/>
-        Likes: {blog.likes}
+      <div className="blog-details" style={{ display: !blogExpanded ? 'none' : '' }}>
+        <p>Author: {blog.author}</p>
+        <p>Posted by: {blog.user.name}</p>
+        <p>Likes: {blog.likes}</p>
       </div>
     </div>
   );

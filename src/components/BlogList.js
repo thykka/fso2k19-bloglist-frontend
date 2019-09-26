@@ -4,7 +4,7 @@ import Blog from './Blog';
 const BlogList = ({ blogs, userName, handleLikeBlog, handleRemoveBlog }) => {
   return (
     <section className="bloglist">
-      <h2>Blogs {userName}</h2>
+      <h2>Blogs</h2>
       {
         blogs.map(blog => {
           return (

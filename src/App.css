@@ -31,6 +31,11 @@ section {
   margin: var(--size) 0;
 }
 
+#root > div > section {
+  margin: 0 auto;
+  max-width: 600px;
+}
+
 section > h2 {
   margin-top: 0;
 }
@@ -86,7 +91,7 @@ button:disabled {
 
 .blog {
   display: flex;
-  flex-flow: row wrap;
+  flex-flow: row nowrap;
   justify-content: space-between;
   line-height: 1.5;
   padding: var(--size);
@@ -95,7 +100,26 @@ button:disabled {
   border-top: 1px solid hsl(var(--hue), 25%, 85%);
 }
 
+.blog-details {
+  background-color: #fff;
+  box-shadow: 0 var(--size) var(--size) calc(-0.75 * var(--size)) #0003;
+  padding: var(--size);
+  margin-bottom: var(--size);
+}
+
+.blog-details p {
+  margin: 0 0 var(--size) 0;
+}
+
+.blog > a {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 0 1 auto;
+}
+
 .blog-actions {
+  flex: 0 0 auto;
   display: inline-flex;
   flex-flow: row nowrap;
 }
@@ -107,11 +131,7 @@ button:disabled {
   min-height: 1.5em;
 }
 
-.blog .details {
-  width: 100%;
-}
-
 .blog.expanded {
-  background: #fff;
+  background-image: linear-gradient(to bottom, transparent, #fff);
   margin-bottom: var(--size) 0;
 }
