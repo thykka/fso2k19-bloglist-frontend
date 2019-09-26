@@ -18,7 +18,7 @@ const Blog = ({ blog, isPostedByUser, handleLikeBlog, handleRemoveBlog }) => {
           {blog.title}
         </a>
         <div className="blog-actions">
-          <button
+          <button className="button button--expand"
             onClick={() => setBlogExpanded(!blogExpanded)}>
             { blogExpanded ? '-' : '+' }
           </button>
