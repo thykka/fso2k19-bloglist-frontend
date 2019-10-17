@@ -9,6 +9,7 @@ import Notification from './components/Notification';
 import LoginForm from './components/LoginForm';
 import LogoutForm from './components/LogoutForm';
 import Togglable from './components/Togglable';
+import { useField } from './hooks/index';
 
 function App() {
   const [blogs, setBlogs] = useState([]);
@@ -17,8 +18,8 @@ function App() {
   const [newBlogUrl, setNewBlogUrl] = useState('');
   const [errorMessage, setErrorMessage] = useState(null);
   const [errorType, setErrorType] = useState('error');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const username = useField('text');
+  const password = useField('password');
   const [user, setUser] = useState(null);
 
   const newBlogFormRef = React.createRef();
@@ -49,15 +50,16 @@ function App() {
     event.preventDefault();
     try {
       const user = await loginService.login({
-        username, password
+        username: username.props.value,
+        password: password.props.value
       });
       window.localStorage.setItem(
         userStorageKey,
         JSON.stringify(user)
       );
       setUser(user);
-      setUsername('');
-      setPassword('');
+      username.reset();
+      password.reset();
     } catch(e) {
       setNotification('Access denied');
     }
@@ -124,8 +126,6 @@ function App() {
         <Togglable showLabel="Log in" hideLabel="Cancel">
           <LoginForm
             handleSubmit={handleLogin}
-            handleUsernameChange={({ target }) => setUsername(target.value)}
-            handlePasswordChange={({ target }) => setPassword(target.value)}
             username={username}
             password={password}
           />
