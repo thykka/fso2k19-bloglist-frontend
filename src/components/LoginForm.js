@@ -1,15 +1,31 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { useField } from '../hooks/index';
+import { login } from '../reducers/userReducer';
+import { flashNotification } from '../reducers/notificationReducer';
 
 
-const LoginForm = ({
-  handleSubmit,
-  username, password
-}) => {
+const LoginForm = (props) => {
+  const username = useField('text');
+  const password = useField('password');
+
+  const handleSubmit = async event => {
+    event.preventDefault();
+    const user = await props.login({
+      username: username.props.value,
+      password: password.props.value
+    });
+    if(user) {
+      props.flashNotification('Logged in', { level: 'info' });
+    } else {
+      props.flashNotification('Access denied');
+    }
+  };
+
   return (
     <section className="login">
       <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={ handleSubmit }>
         <label>
           Username:
           <input {...username.props} name="username" />
@@ -24,10 +40,7 @@ const LoginForm = ({
   );
 };
 
-LoginForm.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
-  username: PropTypes.object.isRequired,
-  password: PropTypes.object.isRequired
-};
-
-export default LoginForm;
+const mapStateToProps = state => ({
+  user: state.user
+});
+export default connect(mapStateToProps, { login, flashNotification })(LoginForm);

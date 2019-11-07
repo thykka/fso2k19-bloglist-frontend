@@ -55,4 +55,8 @@ const NewBlogForm = (props) => {
   );
 };
 
-export default connect(null, { createBlog, flashNotification })(NewBlogForm);
+const mapStateToProps = state => ({
+  username: state.user.username
+});
+
+export default connect(mapStateToProps, { createBlog, flashNotification })(NewBlogForm);

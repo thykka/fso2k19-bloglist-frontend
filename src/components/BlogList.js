@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 import Blog from './Blog';
 
 const BlogList = props => {
-  const { blogs } = props;
-  const { username } = props;
+  const { blogs, username } = props;
 
   return (
     <section className="bloglist">
@@ -35,7 +34,8 @@ const sortByLikes = sortBlogs('likes', true);
 
 const mapStateToProps = state => {
   return {
-    blogs: state.blogs.sort(sortByLikes)
+    blogs: state.blogs.sort(sortByLikes),
+    username: state.user.username
   };
 };
 
