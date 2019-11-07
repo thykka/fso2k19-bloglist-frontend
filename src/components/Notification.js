@@ -1,13 +1,22 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
-function Notification(props) {
+const Notification = (props) => {
+  const { notification } = props;
+
   return (
     <div>
-      { props.message && (
-        <p className={props.type || 'error'}>{props.message}</p>
+      { notification.visible && (
+        <p className={notification.level || 'error'}>{notification.message}</p>
       )}
     </div>
   );
-}
+};
 
-export default Notification;
+const mapStateToProps = state => {
+  return {
+    notification: state.notification
+  };
+};
+
+export default connect(mapStateToProps)(Notification);

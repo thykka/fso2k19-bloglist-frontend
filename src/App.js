@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 import blogService from './services/blogs';
 import loginService from './services/login';
 import BlogList from './components/BlogList';
@@ -11,13 +12,13 @@ import LogoutForm from './components/LogoutForm';
 import Togglable from './components/Togglable';
 import { useField } from './hooks/index';
 
-function App() {
+import { flashNotification } from './reducers/notificationReducer';
+
+function App(props) {
   const [blogs, setBlogs] = useState([]);
   const [newBlogTitle, setNewBlogTitle] = useState('');
   const [newBlogAuthor, setNewBlogAuthor] = useState('');
   const [newBlogUrl, setNewBlogUrl] = useState('');
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [errorType, setErrorType] = useState('error');
   const username = useField('text');
   const password = useField('password');
   const [user, setUser] = useState(null);
@@ -40,12 +41,6 @@ function App() {
     }
   }, []);
 
-  const setNotification = (message, type = 'error') => {
-    setErrorMessage(message);
-    if(type) setErrorType(type);
-    setTimeout(() => setErrorMessage(null), 8000);
-  };
-
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
@@ -60,8 +55,9 @@ function App() {
       setUser(user);
       username.reset();
       password.reset();
+      props.flashNotification('Logged in as ' + user.username, { duration: 5, level: 'info' });
     } catch(e) {
-      setNotification('Access denied');
+      props.flashNotification('Access denied.', { duration: 5 });
     }
   };
 
@@ -86,9 +82,9 @@ function App() {
       setNewBlogTitle('');
       setNewBlogAuthor('');
       setNewBlogUrl('');
-      setNotification('Blog added', 'info');
+      props.flashNotification('Blog added!', { duration: 5, level: 'info' });
     } catch(e) {
-      setNotification('Failed to add blog');
+      props.flashNotification('Failed to add blog', { duration: 5 });
     }
   };
 
@@ -121,7 +117,7 @@ function App() {
   return (
     <div>
       <h1>Bloglist</h1>
-      <Notification message={errorMessage} type={errorType} />
+      <Notification />
       { user === null && (
         <Togglable showLabel="Log in" hideLabel="Cancel">
           <LoginForm
@@ -157,4 +153,4 @@ function App() {
   );
 }
 
-export default App;
+export default connect(null, { flashNotification })(App);
