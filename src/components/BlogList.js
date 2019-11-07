@@ -1,7 +1,11 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import Blog from './Blog';
 
-const BlogList = ({ blogs, userName, handleLikeBlog, handleRemoveBlog }) => {
+const BlogList = props => {
+  const { blogs } = props;
+  const { username } = props;
+
   return (
     <section className="bloglist">
       <h2>Blogs</h2>
@@ -12,9 +16,8 @@ const BlogList = ({ blogs, userName, handleLikeBlog, handleRemoveBlog }) => {
               className="bloglist"
               key={blog.id}
               blog={blog}
-              isPostedByUser={userName === blog.user.username}
-              handleLikeBlog={handleLikeBlog}
-              handleRemoveBlog={handleRemoveBlog} />
+              isPostedByUser={username === blog.user.username}
+            />
           );
         })
       }
@@ -22,4 +25,18 @@ const BlogList = ({ blogs, userName, handleLikeBlog, handleRemoveBlog }) => {
   );
 };
 
-export default BlogList;
+const sortBlogs = (key, desc) => {
+  return (blogA, blogB) => {
+    if(desc) return blogB[key] - blogA[key];
+    return blogA[key] - blogB[key];
+  };
+};
+const sortByLikes = sortBlogs('likes', true);
+
+const mapStateToProps = state => {
+  return {
+    blogs: state.blogs.sort(sortByLikes)
+  };
+};
+
+export default connect(mapStateToProps, {})(BlogList);

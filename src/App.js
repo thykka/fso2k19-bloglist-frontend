@@ -13,12 +13,9 @@ import Togglable from './components/Togglable';
 import { useField } from './hooks/index';
 
 import { flashNotification } from './reducers/notificationReducer';
+import { initializeBlogs } from './reducers/blogsReducer';
 
-function App(props) {
-  const [blogs, setBlogs] = useState([]);
-  const [newBlogTitle, setNewBlogTitle] = useState('');
-  const [newBlogAuthor, setNewBlogAuthor] = useState('');
-  const [newBlogUrl, setNewBlogUrl] = useState('');
+const App = (props) => {
   const username = useField('text');
   const password = useField('password');
   const [user, setUser] = useState(null);
@@ -28,9 +25,8 @@ function App(props) {
   const userStorageKey = 'bloglist-user';
 
   useEffect(() => {
-    blogService.getAll()
-      .then(initialBlogs => setBlogs(initialBlogs));
-  }, []);
+    props.initializeBlogs();
+  });
 
   useEffect(() => {
     const userJSON = window.localStorage.getItem(userStorageKey);
@@ -67,53 +63,6 @@ function App(props) {
     setUser(null);
   };
 
-  const handleNewBlog = async (event) => {
-    event.preventDefault();
-    newBlogFormRef.current.toggleVisibility();
-
-    try {
-      await blogService.create({
-        title: newBlogTitle,
-        author: newBlogAuthor,
-        url: newBlogUrl
-      });
-
-      updateBlogs();
-      setNewBlogTitle('');
-      setNewBlogAuthor('');
-      setNewBlogUrl('');
-      props.flashNotification('Blog added!', { duration: 5, level: 'info' });
-    } catch(e) {
-      props.flashNotification('Failed to add blog', { duration: 5 });
-    }
-  };
-
-
-  const handleLikeBlog = async (event, id) => {
-    event.preventDefault();
-    await blogService.like(id, {});
-    updateBlogs();
-  };
-
-  const handleRemoveBlog = async (event, id) => {
-    event.preventDefault();
-    await blogService.remove(id);
-    updateBlogs();
-  };
-
-  const updateBlogs = async () => {
-    const blogs = await blogService.getAll();
-    setBlogs(blogs);
-  };
-
-  const sortBlogs = (key, desc) => {
-    return (blogA, blogB) => {
-      if(desc) return blogB[key] - blogA[key];
-      return blogA[key] - blogB[key];
-    };
-  };
-  const sortByLikes = sortBlogs('likes', true);
-
   return (
     <div>
       <h1>Bloglist</h1>
@@ -131,26 +80,13 @@ function App(props) {
         <section>
           <LogoutForm handleSubmit={handleLogout} name={user.name} />
           <Togglable ref={newBlogFormRef} showLabel="New blog" hideLabel="Cancel">
-            <NewBlogForm
-              username={user.username}
-              handleSubmit={handleNewBlog}
-              blogTitle={newBlogTitle}
-              blogAuthor={newBlogAuthor}
-              blogUrl={newBlogUrl}
-              handleTitleChange={({ target }) => setNewBlogTitle(target.value)}
-              handleAuthorChange={({ target }) => setNewBlogAuthor(target.value)}
-              handleUrlChange={({ target }) => setNewBlogUrl(target.value)}
-            />
+            <NewBlogForm username={ user.username } toggleRef={ newBlogFormRef } />
           </Togglable>
-          <BlogList
-            blogs={blogs.sort(sortByLikes)}
-            userName={user.username}
-            handleLikeBlog={handleLikeBlog}
-            handleRemoveBlog={handleRemoveBlog} />
+          <BlogList username={ user.username } />
         </section>
       )}
     </div>
   );
-}
+};
 
-export default connect(null, { flashNotification })(App);
+export default connect(null, { initializeBlogs, flashNotification })(App);

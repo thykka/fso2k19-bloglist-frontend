@@ -1,13 +1,21 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { likeBlog, removeBlog } from '../reducers/blogsReducer';
 
-const Blog = ({ blog, isPostedByUser, handleLikeBlog, handleRemoveBlog }) => {
+const Blog = (props) => {
+  const { blog, isPostedByUser } = props;
   const [blogExpanded, setBlogExpanded] = useState(false);
 
-  const handleRemoveBlogClick = event => {
+  const handleRemoveBlogClick = async event => {
     event.preventDefault();
     if(window.confirm(`Are you sure you wish to delete "${blog.title}"?`)) {
-      handleRemoveBlog(blog.id);
+      const success = await props.removeBlog(blog.id);
+      if(!success) console.log('deleting failed');
     }
+  };
+
+  const handleLikeBlog = async () => {
+    await props.likeBlog(blog.id);
   };
 
   return (
@@ -23,7 +31,7 @@ const Blog = ({ blog, isPostedByUser, handleLikeBlog, handleRemoveBlog }) => {
             { blogExpanded ? '-' : '+' }
           </button>
           <button
-            onClick={event => handleLikeBlog(event, blog.id)}>+1</button>
+            onClick={handleLikeBlog}>+1</button>
           <button
             onClick={handleRemoveBlogClick}
             disabled={!isPostedByUser}>X</button>
@@ -38,4 +46,4 @@ const Blog = ({ blog, isPostedByUser, handleLikeBlog, handleRemoveBlog }) => {
   );
 };
 
-export default Blog;
+export default connect(null, { likeBlog, removeBlog })(Blog);
