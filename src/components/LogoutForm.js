@@ -3,21 +3,20 @@ import { connect } from 'react-redux';
 import { logout } from '../reducers/userReducer';
 
 const LogoutForm = (props) => {
+  if(!props.user) return null;
 
   const { user } = props;
 
-  const handleSubmit = (event) => {
+  const handleClick = (event) => {
     event.preventDefault();
     props.logout();
   };
 
   return (
-    <section className="logout">
-      <p>Logged in as @{user.username}</p>
-      <form onSubmit={handleSubmit}>
-        <button type="submit">Log out</button>
-      </form>
-    </section>
+    <span className="login-info">
+      <span>Logged in as @{user.username}</span>
+      <button type="submit" onClick={handleClick}>Log out</button>
+    </span>
   );
 };
 

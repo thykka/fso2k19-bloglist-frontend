@@ -1,25 +1,24 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Blog from './Blog';
+import { Link } from 'react-router-dom';
 
 const BlogList = props => {
-  const { blogs, username } = props;
+  const { blogs } = props;
 
   return (
     <section className="bloglist">
       <h2>Blogs</h2>
-      {
-        blogs.map(blog => {
-          return (
-            <Blog
-              className="bloglist"
-              key={blog.id}
-              blog={blog}
-              isPostedByUser={username === blog.user.username}
-            />
-          );
-        })
-      }
+      <ul>
+        {
+          blogs.map(blog => {
+            return (
+              <li key={ blog.id }>
+                <Link to={ '/blog/' + blog.id }>{blog.title}</Link>
+              </li>
+            );
+          })
+        }
+      </ul>
     </section>
   );
 };
@@ -34,8 +33,7 @@ const sortByLikes = sortBlogs('likes', true);
 
 const mapStateToProps = state => {
   return {
-    blogs: state.blogs.sort(sortByLikes),
-    username: state.user.username
+    blogs: state.blogs.sort(sortByLikes)
   };
 };
 

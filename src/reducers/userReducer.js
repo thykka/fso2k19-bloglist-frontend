@@ -19,6 +19,7 @@ const login = (username, password) => {
   return async dispatch => {
     try {
       const user = await userService.login(username, password);
+      blogService.setToken(user.token);
       window.localStorage.setItem(
         userStorageKey,
         JSON.stringify(user)

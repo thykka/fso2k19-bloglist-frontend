@@ -7,19 +7,15 @@ const UserDetails = (props) => {
   const { user } = props;
 
   return (
-    <div>
+    <section>
       <h3>Blogs submitted by { user.name } (@{ user.username })</h3>
       <ul>
         { user.blogs.map(blog =>
           <li key={blog.id}>{blog.title}</li>
         )}
       </ul>
-    </div>
+    </section>
   );
 };
 
-const mapStateToProps = state => ({
-  //users: state.users
-});
-
-export default connect(mapStateToProps, {})(UserDetails);
+export default connect(null, {})(UserDetails);
