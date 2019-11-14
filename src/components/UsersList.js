@@ -1,4 +1,7 @@
 import React from 'react';
+import {
+  Link
+} from 'react-router-dom';
 import { connect } from 'react-redux';
 
 const UsersList = (props) => {
@@ -9,7 +12,9 @@ const UsersList = (props) => {
       <ul className="userslist">
         { users.map(user => (
           <li key={ user.id }>
-            <span className="userslist-name">{ user.username }</span>
+            <span className="userslist-name">
+              <Link to={ '/users/' + user.id }>{ user.username }</Link>
+            </span>
             <span className="userslist-blogs">{ user.blogs.length }</span>
           </li>
         )) }

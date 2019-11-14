@@ -16,27 +16,43 @@ import LogoutForm from './components/LogoutForm';
 import Togglable from './components/Togglable';
 
 import UsersList from './components/UsersList';
+import UserDetails from './components/UserDetails';
 
 import { flashNotification } from './reducers/notificationReducer';
 import { initializeBlogs } from './reducers/blogsReducer';
 import { initializeUsers } from './reducers/usersReducer';
 
+const Menu = props => {
+  return (
+    <nav>
+      <Link to='/'> Home </Link>
+      <Link to='/users'> Users </Link>
+    </nav>
+  );
+};
+
 const App = (props) => {
-  const { user } = props;
+  const { user, users, initializeBlogs, initializeUsers } = props;
 
   const newBlogFormRef = React.createRef();
 
   useEffect(() => {
-    props.initializeBlogs();
-    props.initializeUsers();
-  });
+    initializeBlogs();
+  }, [initializeBlogs]);
+
+  useEffect(() => {
+    initializeUsers();
+  }, [initializeUsers]);
 
   const userIsLoggedIn = () => user !== null;
+
+  const userById = id => users.find(user => user.id === id);
 
   return (
     <div>
       <Router>
         <h1>Bloglist</h1>
+        <Menu />
         <Notification />
         <div>
           { userIsLoggedIn() ? <LogoutForm /> : <LoginForm /> }
@@ -56,13 +72,17 @@ const App = (props) => {
             <UsersList />
           </section>
         )} />
+        <Route exact path="/users/:id" render={({ match }) => (
+          <UserDetails user={ userById(match.params.id) } />
+        )} />
       </Router>
     </div>
   );
 };
 
 const mapStateToProps = state => ({
-  user: state.user
+  user: state.user,
+  users: state.users
 });
 
 export default connect(
