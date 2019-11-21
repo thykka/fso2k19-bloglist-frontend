@@ -33,6 +33,11 @@ const BlogDetails = (props) => {
           onClick={ handleRemoveBlogClick }
           disabled={ !isPostedByUser }>Baleet</button>
       </div>
+      <ul className="blog-comments">
+        { blog.comments.map(comment =>
+          <li key={comment.id}>{comment.message}</li>
+        ) }
+      </ul>
     </section>
   );
 };
