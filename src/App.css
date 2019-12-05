@@ -53,12 +53,23 @@ form label {
 }
 
 form label input {
+  background-image: linear-gradient(
+    to bottom,
+    #f0f0f0,
+    #f0f0f0 20%,
+    #fff 80%
+  );
   border: 1px solid #ccc;
   flex: 0 1 calc(100% - 10rem);
   font: inherit;
   margin-left: 1em;
   margin-bottom: var(--size);
   padding: var(--size);
+}
+form label input:disabled {
+  background: none;
+  border-color: transparent;
+  padding-left: 0;
 }
 
 button {
@@ -76,6 +87,31 @@ button:active {
 button:disabled {
   color: #888;
   background: hsl(var(--hue), 5%, 80%);
+}
+
+.navbar {
+  background-image: linear-gradient(to bottom, #fff6, #fff0);
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-items: baseline;
+  margin: 0 0 0 -0.5em;
+  padding: 1em 0;
+}
+.navbar a {
+  margin: 0 0.5em;
+}
+.navbar .login-info {
+  margin-left: auto;
+}
+
+
+.login-info > span {
+  font-style: oblique;
+  opacity: 0.5;
+}
+.login-info button {
+  margin-left: 1em;
 }
 
 .info,

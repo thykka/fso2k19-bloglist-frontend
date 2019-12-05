@@ -47,7 +47,7 @@ const NewBlogForm = (props) => {
           URL: <input value={blogUrl} onChange={({ target }) => setBlogUrl(target.value)} />
         </label>
         <label>
-          Added by: <input value={'@' + username} disabled style={{ border: 0, paddingLeft: 0 }} />
+          Added by: <input value={'@' + username} disabled />
         </label>
         <button type="submit">Add</button>
       </form>

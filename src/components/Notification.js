@@ -5,11 +5,11 @@ const Notification = (props) => {
   const { notification } = props;
 
   return (
-    <div>
+    <>
       { notification.visible && (
         <p className={notification.level || 'error'}>{notification.message}</p>
       )}
-    </div>
+    </>
   );
 };
 

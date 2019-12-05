@@ -26,7 +26,7 @@ import { initializeUsers } from './reducers/usersReducer';
 
 const Menu = () => {
   return (
-    <nav>
+    <nav className='navbar'>
       <Link to='/'> Home </Link>
       <Link to='/users'> Users </Link>
       <LogoutForm />
