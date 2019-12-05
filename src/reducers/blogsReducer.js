@@ -50,7 +50,22 @@ const createBlog = blog => {
   };
 };
 
-export { initializeBlogs, likeBlog, removeBlog, createBlog };
+const newComment = comment => {
+  return async dispatch => {
+    try {
+      const updatedBlog = await blogsService.addComment(comment);
+      dispatch({
+        type: 'NEW_COMMENT',
+        data: updatedBlog
+      });
+      return true;
+    } catch(e) {
+      return false;
+    }
+  };
+};
+
+export { initializeBlogs, likeBlog, removeBlog, createBlog, newComment };
 
 const create = (state, newBlog) => {
   return [...state, newBlog];
@@ -67,6 +82,10 @@ const remove = (state, id) => {
   return state.filter(blog => blog.id !== id);
 };
 
+const addComment = (state, updatedBlog) => {
+  return [...state.filter(blog => blog.id !== updatedBlog.id), updatedBlog];
+};
+
 export default (state = [], action) => {
   let updatedState = false;
   switch(action.type) {
@@ -81,6 +100,9 @@ export default (state = [], action) => {
       break;
     case 'REMOVE_BLOG':
       updatedState = remove(state, action.data);
+      break;
+    case 'NEW_COMMENT':
+      updatedState = addComment(state, action.data);
       break;
     default:
   }

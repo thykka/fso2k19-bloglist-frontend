@@ -1,8 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { likeBlog, removeBlog } from '../reducers/blogsReducer';
+import { useField } from '../hooks/index';
+import { likeBlog, removeBlog, newComment } from '../reducers/blogsReducer';
+import { flashNotification } from '../reducers/notificationReducer';
 
 const BlogDetails = (props) => {
+  const newCommentText = useField('text');
+
   if(typeof props.blog === 'undefined') return null;
 
   const { blog, currentUser } = props;
@@ -19,7 +23,22 @@ const BlogDetails = (props) => {
     await props.likeBlog(blog.id);
   };
 
-  const isPostedByUser = currentUser.username === blog.user.username;
+  const handleNewCommentSubmit = async event => {
+    event.preventDefault();
+
+    const success = await props.newComment({
+      message: newCommentText.props.value,
+      blog: blog.id
+    });
+
+    if(success) {
+      newCommentText.reset();
+    } else {
+      props.flashNotification(`Failed to add comment "${ newCommentText.props.value }"`);
+    }
+  };
+
+  const isPostedByUser = currentUser && currentUser.username === blog.user.username;
 
   return (
     <section>
@@ -38,8 +57,15 @@ const BlogDetails = (props) => {
           <li key={comment.id}>{comment.message}</li>
         ) }
       </ul>
+      <form onSubmit={handleNewCommentSubmit}>
+        <label>
+          New comment:
+          <input {...newCommentText.props} name="newComment" />
+        </label>
+        <button type="submit">Add</button>
+      </form>
     </section>
   );
 };
 
-export default connect(null, { likeBlog, removeBlog })(BlogDetails);
+export default connect(null, { likeBlog, removeBlog, newComment, flashNotification })(BlogDetails);
