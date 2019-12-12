@@ -38,18 +38,18 @@ const NewBlogForm = (props) => {
       <h2>Add new</h2>
       <form onSubmit={handleSubmit}>
         <label>
-          Title: <input value={blogTitle} onChange={({ target }) => setBlogTitle(target.value)} />
+          Title: <input id="newblog-title" value={blogTitle} onChange={({ target }) => setBlogTitle(target.value)} />
         </label>
         <label>
-          Author: <input value={blogAuthor} onChange={({ target }) => setBlogAuthor(target.value)} />
+          Author: <input id="newblog-author" value={blogAuthor} onChange={({ target }) => setBlogAuthor(target.value)} />
         </label>
         <label>
-          URL: <input value={blogUrl} onChange={({ target }) => setBlogUrl(target.value)} />
+          URL: <input id="newblog-url" value={blogUrl} onChange={({ target }) => setBlogUrl(target.value)} />
         </label>
         <label>
-          Added by: <input value={'@' + username} disabled />
+          Added by: <input id="newblog-username" value={'@' + username} disabled />
         </label>
-        <button type="submit">Add</button>
+        <button id="newblog-submit" type="submit">Add</button>
       </form>
     </section>
   );
